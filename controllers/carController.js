@@ -226,9 +226,9 @@ exports.addPlacePrice = async(req, res, next) => {
 exports.updatePlacePrice = async(req, res, next) => {
     try {
         if (req.body.place && req.body.price) {
-            const add = await PlacePrice.updateOne({ _id: req.params.id }, { carModel: req.body.carModel, place: req.body.place, price: req.body.price, createdAt: new Date() });
+            const add = await PlacePrice.updateOne({ _id: req.params.id }, { carModel: req.body.carModel, place: req.body.place, price: req.body.price, perKmPrice:req.body.perKmPrice, createdAt: new Date() });
             if (add) {
-                return response(200, 1, 'Data added successfully', res);
+                return response(200, 1, 'Data Updated successfully', res);
             } else {
                 return response(400, 0, 'something error', res);
             }

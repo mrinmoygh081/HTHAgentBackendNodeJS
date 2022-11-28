@@ -8,6 +8,7 @@ const router = express.Router();
 const multer = require("multer");
 const path = require('path');
 const { route } = require("express/lib/application");
+const adminPriceController = require("../controllers/adminPriceController")
 // let urlencode = bodyParser.urlencoded({ extended: false });
 
 const imageStorage = multer.diskStorage({
@@ -59,6 +60,8 @@ router.get("/get-car/:id", authController.adminProtected, carController.getCar);
 router.post("/add-car-details", authController.adminProtected, carController.addCarDetails);
 
 router.post("/add-place-price", authController.adminProtected, carController.addPlacePrice);
+
+router.get("/get-place-price", authController.adminProtected, adminPriceController.allPlacePrice);
 
 router.post("/update-place-price/:id", authController.adminProtected, carController.updatePlacePrice);
 
