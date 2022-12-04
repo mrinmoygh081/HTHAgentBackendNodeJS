@@ -34,3 +34,7 @@ exports.carDetails = async (req, res, next) => {
         return response(400, 0, 'Something error', res);
     }
 }
+
+// exports.editCarDetails = async(req, res, next){
+
+// }

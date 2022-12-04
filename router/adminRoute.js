@@ -9,6 +9,7 @@ const multer = require("multer");
 const path = require('path');
 const { route } = require("express/lib/application");
 const adminPriceController = require("../controllers/adminPriceController")
+const adminBookingController = require("../controllers/adminBookingController");
 // let urlencode = bodyParser.urlencoded({ extended: false });
 
 const imageStorage = multer.diskStorage({
@@ -67,15 +68,20 @@ router.post("/update-place-price/:id", authController.adminProtected, carControl
 
 router.post("/add-car-includes", authController.adminProtected, carController.includes);
 
-router.get("/booking", authController.adminProtected, carController.getAllBooking);
+router.get("/booking", authController.adminProtected, adminBookingController.getAllBooking);
+
+router.post("/booking", authController.adminProtected, adminBookingController.booking);
 
 router.get("/booking/:id", authController.adminProtected, carController.getBooking);
+router.post("/booking/:id", authController.adminProtected, adminBookingController.editBooking);
 
 // router.post("/addDriver", authController.adminProtected, carController.addDriver);
 
 router.post("/assignDriver", authController.adminProtected, carController.assignDriver);
 
 router.get("/getBookingInfo:pnrno", authController.adminProtected, carController.getBookingInfo);
+
+router.get("/booking", authController.adminProtected, adminBookingController.getAllBooking);
 
 router.post("/addTourAgent", authController.adminProtected, adminTourAgentController.addTourAgent);
 
@@ -86,7 +92,7 @@ router.get("/driverDetails",   adminDriverController.DriverDetails);
 
 router.post('/image/:name/:ex', uploadFile.single('image'), (req, res) => {
   
-  res.send(req.params.name);
+  
 }, (err, req, res, next)=>{
   res.status(400).send({status: 0, error: err.message})
 });
