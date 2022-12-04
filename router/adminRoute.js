@@ -14,8 +14,11 @@ const adminBookingController = require("../controllers/adminBookingController");
 
 const imageStorage = multer.diskStorage({
     // Destination to store image     
-    Destination: 'upload', 
+    Destination: function(req, file, cb){
+      cb(null, "upload");
+    }, 
       filename: (req, file, cb) => {
+        const parts = file.mimetype.split("/");
           cb(null, file.fieldname + '_' + Date.now() 
              + path.extname(file.originalname))
             // file.fieldname is name of the field (image)
@@ -25,16 +28,7 @@ const imageStorage = multer.diskStorage({
 
 const imageUpload = multer({
     storage: imageStorage,
-    // limits: {
-    //   fileSize: 1000000 // 1000000 Bytes = 1 MB
-    // },
-  //   fileFilter(req, file, cb) {
-  //     // if (!file.originalname.match(/\.(pdf)$/)) { 
-  //     //    // upload only png and jpg format
-  //     //    return cb(new Error('Please upload a PDF'))
-  //     //  }
-  //    cb(undefined, true)
-  // }
+   
 });
 
 const uploadFile = multer({
@@ -90,11 +84,33 @@ router.get("/carlist",  authController.adminProtected, carController.getAllCarLi
 router.get("/driverDetails",   adminDriverController.DriverDetails);
 
 
-router.post('/image/:name/:ex', uploadFile.single('image'), (req, res) => {
-  
-  
-}, (err, req, res, next)=>{
-  res.status(400).send({status: 0, error: err.message})
+router.post('/image/:name/:ex', async (req, res, next)=>{
+  var storage = multer.diskStorage({
+    destination: function(req, file, cb){
+      console,log(__dirname)
+      cb(null, '__dirname/upload');
+    },
+    filename: function(req, file, cb){
+      var temp_file_arr = file.originalname.split(".");
+
+      var temp_file_name = temp_file_arr[0];
+      var temp_file_ex = temp_file_arr[1];
+      if(temp_file_ex != req.params.ex) return res.send('this file not supported');
+      cb(null, temp_file_name + '-' + Date.now() + '.' +temp_file_ex);
+
+    }
+  });
+
+  let upload = multer({storage: storage}).single('image');
+
+  upload(req, res, function(err){
+    if(err){
+      return res.send("Error upload file");
+    }else{
+      return res.end(`/upload/${req.params.name}${Date.now()}.${req.params.ex}`);
+    }
+  })
+
 });
 
 
