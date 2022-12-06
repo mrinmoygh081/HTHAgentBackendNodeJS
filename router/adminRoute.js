@@ -79,6 +79,8 @@ router.get("/booking", authController.adminProtected, adminBookingController.get
 
 router.post("/addTourAgent", authController.adminProtected, adminTourAgentController.addTourAgent);
 
+router.get("/TourAgent", authController.adminProtected, adminTourAgentController.TourAgent);
+
 router.get("/carlist",  authController.adminProtected, carController.getAllCarList);
 
 router.get("/driverDetails",   adminDriverController.DriverDetails);

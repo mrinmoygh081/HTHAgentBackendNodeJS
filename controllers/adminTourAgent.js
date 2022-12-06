@@ -29,13 +29,14 @@ exports.addTourAgent = async (req, res, next) => {
     try{
         const {name, email, companyName, password, phone, address, passwordConfirm, companyLogo} = req.body;
         if(!name || !email || !companyName || !password || !phone || !address) return response(400, 0, 'name, email, companyName, password, phone, address, passwordConfirm, companyLogo fields are required', res);
-        const role = agent;
+        const role = 'agent';
         activeStatus = 1;
 
         const addData = await User.create({
             name: name,
             email: email,
             phone:phone,
+            role:role,
             password:password,
             passwordConfirm: passwordConfirm
         });
@@ -44,7 +45,7 @@ exports.addTourAgent = async (req, res, next) => {
         if(!addData) return response(400,0, 'Data not uploaded', res);
         const agentInfoUpload = await TourAgent.create({
             name:name,
-            companyName: filename,
+            companyName: companyName,
             companyLogo: companyLogo,
             address: address
         });
@@ -71,7 +72,16 @@ exports.addTourAgent = async (req, res, next) => {
     }
 };
 
-
+exports.TourAgent = async(req, res, next)=>{
+    try{
+       
+        const tourAgentList = await User.find({role:req.params.role})
+        
+    }catch(err){
+        console.log(err);
+        return response(400, 0, err, res);
+    }
+}
 
 exports.editAgentInfo = async (req, res, next) => {
     try{
