@@ -192,9 +192,24 @@ const getCurrentLocation = async(req, res, next) => {
 }
 
 
-exports.driverPayment = async (req, res, next) => {
+exports.driverPayment1 = async (req, res, next) => {
     
-    const payment = await DriverPayment.find({_id:req.authUser._id});
+    const payment = await DriverPayment.find({driverId:req.authUser._id}).sort({date:'asc'}).populate('bookingId').populate('car');
     if(!payment) return response(400, 0, 'Something error', res);
     return response(200, 1, payment, res);
+}
+
+exports.driverPayment = async (req, res, next)=> {
+    try{
+        const id = req.params.id
+        const allPayments = await DriverPayment.find({driverId:id}).sort({date:'asc'}).populate('bookingId').populate('car');
+        if(!allPayments) return response(200, 0, 'Something error', res)
+        if(allPayments.length < 1) return response(200, 0, 'No payment found', res)
+        return response(200, 1, {allPayments}, res)
+    }catch (err) {
+        // console.log(err)
+        response(400, 0, err, res);
+    
+    }
+   
 }

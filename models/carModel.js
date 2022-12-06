@@ -41,7 +41,7 @@ const CarSchema = new mongoose.Schema({
         },
         status: {
             type: String,
-            default: '0'
+            default: '1'
 
         }
     },

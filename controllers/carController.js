@@ -247,7 +247,7 @@ exports.updatePlacePrice = async(req, res, next) => {
 exports.getAllBooking = async(req, res, next) => {
     try {
         
-        const booking = await Booking.find().sort({ _id: -1 }).populate('driver').populate('userId').populate('car'); 
+        const booking = await Booking.find().sort({ bookingDate: 'asc' }).populate('driver').populate('userId').populate('car'); 
         if (booking) {
             return response(200, 1, booking, res);
         } else {
@@ -333,7 +333,7 @@ exports.assignDriver = async (req, res, next) => {
     }
     const findBookingId = await Booking.findOne({pnrno: pnrno});
 
-    if(findBookingId.driver != null) return response(400, 0, 'Booking already assign', res);
+    if(findBookingId.driver != null) return response(200, 0, 'Booking already assign', res);
 
     console.log(findBookingId);
    
@@ -400,7 +400,7 @@ exports.getAllCarList = async(req, res, next) => {
                     { "availability.status": "1" },
                     { "availability.status": '' },
                 ],
-            }).select('permit carName').populate({path:'driver', mathch:{driverStatus:1}, select:'driverName'});
+            }).populate({path:'driver', mathch:{driverStatus:1}});
             console.log(new Date(req.body.date));
             if (cars.length > 0) {
                 return response(200, 1, cars, res);
