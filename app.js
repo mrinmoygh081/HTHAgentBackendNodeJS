@@ -21,6 +21,7 @@ const fileUploadRouter = require('./router/fileUploadRouter');
 const app = express();
 app.use(cors());
 app.use("/upload", express.static("upload"));
+app.use("/images", express.static("images"));
 app.use(bodyParser.urlencoded({extended:false}));
 
 app.set('view engine', 'ejs');

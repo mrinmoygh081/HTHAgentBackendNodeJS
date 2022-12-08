@@ -15,6 +15,7 @@ const CarTypeCount = require('./../models/carTypeCount');
 const Booking = require('./../models/bookingModel');
 const Includes = require('./../models/includeModel');
 const DriverPayment = require("../models/driverPayment");
+const sendEmail = require('../utils/mail');
 const response = (status, code, msg, res) => {
     return res.status(status).json({ status: code, message: msg });
 }
@@ -84,11 +85,12 @@ exports.addCarDetails = async(req, res, next) => {
                 if (carRegister) {
 
                     const uniqueFilename = new Date().getTime();
-                    const fileName = `/upload/${uniqueFilename}.pdf`
+                    const fileName = req.body.documentFile
 
                     const carDocuments = {
                         documentTypeName: req.body.documentNames,
-                        documentFile: fileName
+                        documentFile: fileName,
+                        car:carRegister._id
                     };
                     const documentUpload = await carDocument.create(carDocuments);
                     if (documentUpload) {
@@ -97,12 +99,29 @@ exports.addCarDetails = async(req, res, next) => {
                         if (carType.length == 0) {
                             const addCarType = CarTypeCount.create({ carModel: req.body.carModel });
                             if (addCarType) {
-                                 return response(201, 1, {ownerInfo: ownerData, driverInfo: driverData, ownerInfo:ownerRegister, carInfo: carRegister, carDocumentInfo: documentUpload, image:`${uniqueFilename}`, type:'pdf'}, res);
+                                response(201, 1, {ownerInfo: ownerData, driverInfo: driverData, ownerInfo:ownerRegister, carInfo: carRegister, carDocumentInfo: documentUpload, image:`${uniqueFilename}`, type:'pdf'}, res);
                             }
                         } else {
-                            return response(201, 1, {ownerInfo: ownerData, driverInfo: driverData, ownerInfo:ownerRegister, carInfo: carRegister, carDocumentInfo: documentUpload}, res);
+
+                             response(201, 1, {ownerInfo: ownerData, driverInfo: driverData, ownerInfo:ownerRegister, carInfo: carRegister, carDocumentInfo: documentUpload}, res);
                         }
                     }
+
+                    
+                        let options = {
+                            email: req.body.email,
+                            subject: 'HTH Car Registration',
+                            message: `Your car register successfully. Please find login details below.
+                            Phone: ${loginInfo.driverMobile},
+                            Password: ${loginInfo.password}
+                            Thanks & regurds
+                            HTH Cabs
+                            `
+                        };
+                        const sendmail = await sendEmail(options);
+                        return;
+    
+                    
 
                 }
             }

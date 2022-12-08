@@ -10,41 +10,21 @@ const path = require('path');
 const { route } = require("express/lib/application");
 const adminPriceController = require("../controllers/adminPriceController")
 const adminBookingController = require("../controllers/adminBookingController");
+const admincarController = require("../controllers/adminCarController");
 // let urlencode = bodyParser.urlencoded({ extended: false });
 
-const imageStorage = multer.diskStorage({
-    // Destination to store image     
-    Destination: function(req, file, cb){
-      cb(null, "upload");
-    }, 
-      filename: (req, file, cb) => {
-        const parts = file.mimetype.split("/");
-          cb(null, file.fieldname + '_' + Date.now() 
-             + path.extname(file.originalname))
-            // file.fieldname is name of the field (image)
-            // path.extname get the uploaded file extension
-    }
-});
-
-const imageUpload = multer({
-    storage: imageStorage,
-   
-});
-
-const uploadFile = multer({
-  dest:'upload',
-  limits:{
-    fileSize: 1000000
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'images')
   },
-  fileFilter(req, file, cb){
-    if(!file.originalname.match(/\.(doc|docs|pdf)$/)){
-      return cb(new Error ('Please upload a pdf file'));
-    }
-    // cb(new Error('File must be a PDF.'));
-     cb(undefined, true)
-
+  filename: function (req, file, cb) {
+    if (!file.originalname.match(/\.(doc|docs|pdf|png|jpg|jpeg)$/)) return cb(new Error ('Please upload image or pdf or doc file only'));
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, uniqueSuffix + path.extname(file.originalname));
   }
-});
+})
+
+const upload = multer({ storage: storage })
 
 
 
@@ -53,6 +33,8 @@ router.get("/get-all-car", authController.adminProtected, carController.getAllCa
 router.get("/get-car/:id", authController.adminProtected, carController.getCar);
 
 router.post("/add-car-details", authController.adminProtected, carController.addCarDetails);
+
+router.post("/edit-car-details/:id", authController.adminProtected, admincarController.editCarDetails);
 
 router.post("/add-place-price", authController.adminProtected, carController.addPlacePrice);
 
@@ -86,34 +68,11 @@ router.get("/carlist",  authController.adminProtected, carController.getAllCarLi
 router.get("/driverDetails",   adminDriverController.DriverDetails);
 
 
-router.post('/image/:name/:ex', async (req, res, next)=>{
-  var storage = multer.diskStorage({
-    destination: function(req, file, cb){
-      console,log(__dirname)
-      cb(null, '__dirname/upload');
-    },
-    filename: function(req, file, cb){
-      var temp_file_arr = file.originalname.split(".");
-
-      var temp_file_name = temp_file_arr[0];
-      var temp_file_ex = temp_file_arr[1];
-      if(temp_file_ex != req.params.ex) return res.send('this file not supported');
-      cb(null, temp_file_name + '-' + Date.now() + '.' +temp_file_ex);
-
-    }
-  });
-
-  let upload = multer({storage: storage}).single('image');
-
-  upload(req, res, function(err){
-    if(err){
-      return res.send("Error upload file");
-    }else{
-      return res.end(`/upload/${req.params.name}${Date.now()}.${req.params.ex}`);
-    }
-  })
-
-});
+router.post('/image/:name/:ex', upload.single('image'), (req, res) => {
+  return res.status(200).json({status:1, msg: 'File upload successfully', filePath: req.file.path})
+ }, (err, req, res, next)=>{
+   res.status(400).send({status: 0, error: err.message})
+ });
 
 
 

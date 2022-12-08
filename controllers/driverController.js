@@ -199,17 +199,35 @@ exports.driverPayment1 = async (req, res, next) => {
     return response(200, 1, payment, res);
 }
 
-exports.driverPayment = async (req, res, next)=> {
+
+exports.driverPayment = async (req, res, next) => {
     try{
-        const id = req.params.id
-        const allPayments = await DriverPayment.find({driverId:id}).sort({date:'asc'}).populate('bookingId').populate('car');
-        if(!allPayments) return response(200, 0, 'Something error', res)
-        if(allPayments.length < 1) return response(200, 0, 'No payment found', res)
-        return response(200, 1, {allPayments}, res)
-    }catch (err) {
-        // console.log(err)
-        response(400, 0, err, res);
-    
+        const driverDetails = await  Driver.findOne({userId:req.params.id});
+        if(!driverDetails) return response(200, 0, 'No driver found', res);
+        const payment = await DriverPayment.find({driverId:driverDetails._id}).populate({path:'bookingId', select: 'travelerInfo pnrno'});
+        if(!payment) return response(200, 0, 'No data found', res);
+        return response(200, 1, payment, res);
+    }catch(err){
+        console.log(err)
+        return response(400, 0, 'Something error', res);
     }
-   
+    
 }
+
+// exports.driverPayment = async (req, res, next)=> {
+//     try{
+//         const id = req.authUser._id
+//         console.log(req.authUser);
+//         const driverDetails = await Driver.find({userId: id}).select('_id');
+//         console.log(driverDetails)
+//         const allPayments = await DriverPayment.find({driverId:driverDetails._id}).sort({date:'asc'}).populate('bookingId').populate('car');
+//         if(!allPayments) return response(200, 0, 'Something error', res)
+//         if(allPayments.length < 1) return response(200, 0, 'No payment found', res)
+//         return response(200, 1, {allPayments}, res)
+//     }catch (err) {
+//         // console.log(err)
+//         response(400, 0, err, res);
+    
+//     }
+   
+// }
