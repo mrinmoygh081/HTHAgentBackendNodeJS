@@ -42,7 +42,7 @@ exports.getAllBooking = async (req, res, next) => {
       .populate({
         path: "bookingId",
         select:
-          "travelerInfo bookingDate pickupTime arrived pnrno carQuantity carModel travelStatus travelInfo",
+          "travelerInfo bookingDate pickupTime arrived pnrno carQuantity carModel totalDays travelStatus travelInfo",
       });
     const booking = await Booking.find({ driver: driverId._id }).sort({
       bookingDate: 1,
