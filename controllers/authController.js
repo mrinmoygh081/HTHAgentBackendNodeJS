@@ -27,7 +27,7 @@ const createdSendToken = async(user, status, res) => {
             expiresIn: '90d',
         }
     );
-    return res.status(status).json({ status: 1, token, name: user.name, email: user.email, phone: user.phone, message: "Token generate successfully" });
+    return res.status(status).json({ status: 1, token, id:user._id, name: user.name, email: user.email, phone: user.phone, message: "Token generate successfully" });
 
 }
 

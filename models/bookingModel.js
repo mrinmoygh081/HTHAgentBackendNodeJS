@@ -135,9 +135,11 @@ BookingSchema.virtual("dueAmount").get(function() {
     const pay = this.payment;
     
     let payment = 0;
+    if(pay){
     for (i = 0; i < pay.length; i++) {
         payment = pay[i].amount + payment;
     }
+}
     return (due = this.price - payment);
 });
 

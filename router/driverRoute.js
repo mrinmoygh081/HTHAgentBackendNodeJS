@@ -18,7 +18,8 @@ router.post("/updateLocation", authController.driverProtected, driverController.
 
 router.get("/getCurrentLocation", authController.driverProtected, driverController.getCurrentLocation);
 
-router.get("/driverPayment", authController.driverProtected, driverController.driverPayment);
+router.get("/driverPayment/:id", authController.driverProtected, driverController.driverPayment);
+
 
 
 router.get("/mail", driverController.sendMail);
