@@ -795,7 +795,7 @@ exports.verifySignatureTest = async(req, res) => {
 exports.updateArriveStatus = async(req, res, next) => {
     try {
         if(!req.body.pnrno){
-            return res.status(400).json({ status: 0, msg: "pnrno Id not found" });
+            return res.status(200).json({ status: 0, msg: "pnrno Id not found" });
         }
         const update = await Booking.updateOne({ pnrno: req.body.pnrno }, {
             $set: {
@@ -806,7 +806,7 @@ exports.updateArriveStatus = async(req, res, next) => {
             },
         });
         if (update.n == 0) {
-            return res.status(400).json({ status: 0, msg: "Status not updated! Please try again." });
+            return res.status(200).json({ status: 0, msg: "Status not updated! Please try again." });
         } else {
             console.log(update.n > 0);
             return res.status(201).json({ status: 1, msg: "Status update successfully" });
