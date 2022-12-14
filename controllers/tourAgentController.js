@@ -794,10 +794,10 @@ exports.verifySignatureTest = async(req, res) => {
 
 exports.updateArriveStatus = async(req, res, next) => {
     try {
-        if(!req.body.bookingId){
-            return res.status(400).json({ status: 0, msg: "Booking Id not found" });
+        if(!req.body.pnrno){
+            return res.status(400).json({ status: 0, msg: "pnrno Id not found" });
         }
-        const update = await Booking.updateOne({ _id: req.body.bookingId }, {
+        const update = await Booking.updateOne({ pnrno: req.body.pnrno }, {
             $set: {
                 arrived: {
                     arrivedStatus: 1,
