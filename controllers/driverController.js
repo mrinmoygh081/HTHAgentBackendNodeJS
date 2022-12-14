@@ -78,14 +78,14 @@ exports.verifyBooking = async (req, res, next) => {
         } else {
           console.log(verify[0].bookingDate.getMonth());
           console.log(new Date());
-          response(400, 0, "Date is not matched", res);
+          response(200, 0, "Date is not matched", res);
         }
       } else {
-        response(400, 0, "Booking not found or already started", res);
+        response(200, 0, "Booking not found or already started", res);
       }
     } else {
       console.log(err);
-      response(400, 0, "Booking id is required", res);
+      response(200, 0, "Booking id is required", res);
     }
   } catch (err) {
     // console.log(err)
