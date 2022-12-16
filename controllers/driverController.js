@@ -42,12 +42,14 @@ exports.getAllBooking = async (req, res, next) => {
       .populate({
         path: "bookingId",
         select:
-          "travelerInfo bookingDate pickupTime arrived pnrno carQuantity carModel totalDays travelStatus travelInfo",
+          "travelerInfo bookingDate pickupTime arrived pnrno carQuantity carModel totalDays travelStatus travelInfo payment price",
       });
-    const booking = await Booking.find({ driver: driverId._id }).sort({
-      bookingDate: 1,
-    });
-    console.log(booking);
+    // const booking = await Booking.find({ driver: driverId._id }).sort({
+    //   bookingDate: 1,
+    // });
+    // console.log(booking);
+
+    
     response(200, 1, { booking: bookingInfo }, res);
   } catch (err) {
     console.log(err);
