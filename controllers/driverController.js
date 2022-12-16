@@ -49,7 +49,7 @@ exports.getAllBooking = async (req, res, next) => {
     // });
     // console.log(booking);
 
-    
+
     response(200, 1, { booking: bookingInfo }, res);
   } catch (err) {
     console.log(err);
@@ -108,7 +108,7 @@ exports.completeJourney = async (req, res, next) => {
         if (updateBooking.nModified == 1) {
           return response(200, 1, "Thank you! Journey completed", res);
         } else {
-          return response(400, 0, updateBooking.nModified, res);
+          return response(200, 0, updateBooking.nModified, res);
         }
       } else {
         if (req.body.dueAmount) {
@@ -131,19 +131,19 @@ exports.completeJourney = async (req, res, next) => {
               console.log(update.nModified);
               return response(200, 1, "Thank you! Journey completed", res);
             } else {
-              return response(400, 0, "Something error", res);
+              return response(200, 0, "Something error", res);
             }
           } else {
-            return response(400, 0, "Amount does not match", res);
+            return response(200, 0, "Amount does not match", res);
           }
         } else {
-          return response(400, 0, "Please enter due amount", res);
+          return response(200, 0, "Please enter due amount", res);
         }
       }
       console.log(checkPayment.dueAmount);
     } else {
       return response(
-        400,
+        200,
         0,
         "Something error! Booking not found or already completed",
         res
