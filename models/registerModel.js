@@ -22,6 +22,7 @@ const RegisterSchema = new mongoose.Schema({
   phone: {
     type: Number,
     required: [true, "Please enter phone number"],
+    unique: true,
   },
   created_at: {
     type: Date,
@@ -29,10 +30,15 @@ const RegisterSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Please enter your email address"],
+    unique: true,
   },
   designation: {
     type: String,
     required: [true, "Please enter your designation"],
+  },
+  approveStatus:{
+    type:Number,
+    default: 0
   },
   userId: { type: mongoose.Schema.ObjectId, ref: "User" },
 });

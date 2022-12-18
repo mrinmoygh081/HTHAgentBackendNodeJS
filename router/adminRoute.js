@@ -67,6 +67,11 @@ router.get("/carlist",  authController.adminProtected, carController.getAllCarLi
 
 router.get("/driverDetails",   adminDriverController.DriverDetails);
 
+router.get("/getRegisterReq",   adminTourAgentController.getRegisterReq);
+
+router.get("/approveAgent/:id",   adminTourAgentController.approveAgent);
+
+
 
 router.post('/image/:name/:ex', upload.single('image'), (req, res) => {
   return res.status(200).json({status:1, msg: 'File upload successfully', filePath: req.file.path})

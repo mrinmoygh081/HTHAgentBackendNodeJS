@@ -14,7 +14,7 @@ const tourAgentSchema = new mongoose.Schema({
     },
     companyLogo: {
         type: String,
-        required: [true, ]
+        required: [true, 'Please enter your company logo']
     },
     address: {
         type: String,
