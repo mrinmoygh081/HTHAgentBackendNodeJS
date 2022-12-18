@@ -230,7 +230,7 @@ exports.driverPayment = async (req, res, next) => {
     if (!driverDetails) return response(200, 0, "No driver found", res);
     const payment = await DriverPayment.find({
       driverId: driverDetails._id,
-    }).populate({ path: "bookingId", select: "travelerInfo pnrno" });
+    }).populate({ path: "bookingId", select: "travelerInfo pnrno travelStatus" }).sort({date:-1});
     if (!payment) return response(200, 0, "No data found", res);
     return response(200, 1, payment, res);
   } catch (err) {
